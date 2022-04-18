@@ -3,6 +3,8 @@ const hbs = require("hbs");
 const path = require("path");
 const app = express();
 
+const weatherData = require('../utils/weatherData');
+
 const port = process.env.PORT || 3000;
 
 const publicStaticDirPath = path.join(__dirname, '../public');
@@ -21,7 +23,11 @@ app.get('' , (req,res) => {
 })
 
 app.get('/weather', (req, res) => {
-    res.send("This is weather end point.");
+    const address = req.query.address;
+
+    weatherData(address , (result) => {
+        console.log(result);
+    })
 });
 
 app.get('*' , (req,res) => {
