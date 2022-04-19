@@ -19,19 +19,37 @@ hbs.registerPartials(partialsPath);
 app.use(express.static(publicStaticDirPath));
 
 app.get('' , (req,res) => {
-    res.send("Hello");
+    res.render('index', {
+        title: 'Weather App'
+    })
 })
 
 app.get('/weather', (req, res) => {
     const address = req.query.address;
-
-    weatherData(address , (result) => {
-        console.log(result);
+    if(!address) {
+        return res.send({
+            error: "No city entered!"
+        })
+    }
+    weatherData(address , (error, {temperature, description, cityName}) => {
+        if(error) {
+            return res.send({
+                error
+            })
+        }
+        console.log(temperature,description, cityName);
+        res.send({
+            temperature,
+            description,
+            cityName
+        })
     })
 });
 
 app.get('*' , (req,res) => {
-    res.send("Page not found.");
+    res.render('404' , {
+        title: "page not found"
+    })
 })
 app.listen(port, () => {
     console.log("Server is up and running on port: ",port);
