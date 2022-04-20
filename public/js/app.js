@@ -22,11 +22,20 @@ weatherForm.addEventListener('submit' , (event) => {
     locationElement.textContent = "Loading...";
     tempElement.textContent = "";
     weatherCondition.textContent = "";
-    const locationApi = fetchWeather + "?address" + search.value;
+    const locationApi = fetchWeather + "?address=" + search.value;
     fetch(locationApi).then(response => {
         response.json().then(data => {
             // console.log(data)
-            if()
+            if(data.error) {
+                locationElement.textContent = data.error;
+                tempElement.textContent= "";
+                weatherCondition.textContent = "";
+            }
+            else {
+                locationElement.textContent = data.cityName;
+                tempElement.textContent = (data.temperature-273.5).toFixed(2) + String.fromCharCode(176);
+                weatherCondition.textContent = data.description.toUpperCase();
+            }
         })
     });
 })

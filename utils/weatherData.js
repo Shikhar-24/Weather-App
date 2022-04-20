@@ -7,7 +7,10 @@ const weatherData = (address, callback) => {
     request({url, json:true} , (error,{body}) => {
         if(error) {
             callback("Cant fetch data from weather api ", undefined);
-        } else {
+        } else if(!body.main || !body.main.temp || !body.name || !body.weather) {
+            callback("Unable to find data", undefined );
+        }
+         else {
             callback(undefined,{
                 temperature: body.main.temp,
                 description: body.weather[0].description,
